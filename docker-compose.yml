@@ -1,0 +1,39 @@
+
+services:
+  app:
+    build:
+      context: C:\tata\ejercicio_backend
+      dockerfile: C:\tata\ejercicio_backend\Dockerfile
+    image: tcs-backend
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/bdd
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+    networks:
+      - tcs-network
+
+  db:
+    image: 'postgres:12.1-alpine'
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tcs-network
+
+networks:
+  tcs-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
